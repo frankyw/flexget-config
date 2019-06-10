@@ -1,0 +1,304 @@
+variables: variables.yml
+
+templates:
+  anchors:
+    _transmission: &transmission
+      host: transmission
+      port: 9091
+      username: '{? transmission.username ?}'
+      password: '{? transmission.password ?}'
+
+    _iptorrents_credentials: &iptorrents_credentials
+      rss_key: '{? ipt.passkey ?}'
+      uid: '{? ipt.uid ?}'
+      password: '{? ipt.password ?}'
+
+    _torrentday_credentials: &torrentday_credentials
+      uid: "'{? td.uid ?}'"
+      cfduid: '{? td.cfduid ?}'
+      passkey: '{? td.passkey ?}'
+      rss_key: '{? td.rss_key ?}'
+
+    _torrentleech_credentials: &torrentleech_credentials
+      rss_key: '{? tl.rss_key ?}'
+      username: '{? tl.username ?}'
+      password: '{? tl.password ?}'
+
+    _alpharatio_credentials: &alpharatio_credentials
+      username: '{? ar.username ?}'
+      password: '{? ar.password ?}'
+
+    _alpharatio_irc: &alpharatio_irc
+      nickname: '{? ar.nickname ?}' 
+      authkey: '{? ar.authkey ?}' 
+      torrent_pass: '{? ar.torrent_pass ?}' 
+      invite_message: '{? ar.invite_message ?}' 
+
+    _iptorrents_irc: &iptorrents_irc
+      passkey: '{? ipt.passkey ?}'
+      nickname: '{? ipt.nickname ?}' 
+
+    _torrentleech_irc: &torrentleech_irc
+      rsskey: '{? tl.rss_key ?}'
+      nickname: '{? tl.nickname ?}' 
+
+    _torrentday_irc: &torrentday_irc
+      passkey: '{? td.rss_key ?}'
+      nickname: '{? td.nickname ?}' 
+
+    _tv_lookup: &tv_lookup
+      thetvdb_lookup: yes
+      trakt_lookup: yes
+
+    _movie_lookup: &movie_lookup
+      imdb_lookup: yes
+      tmdb_lookup: yes
+
+  trakt_tv_list: &trakt_tv_list
+    trakt_list:
+      username: '{? trakt.username ?}'
+      account: '{? trakt.account ?}'
+      list: Download List
+      type: shows
+
+  thetvdb_list: &thetvdb_list
+    thetvdb_list:
+      username: '{? thetvdb.username ?}'
+      account_id: '{? thetvdb.account_id ?}'
+      api_key: '{? thetvdb.api_key ?}'
+
+  global-settings:
+    transmission:
+      <<: *transmission
+    free_space:
+      path: /storage
+      space: 20000
+    pathscrub: windows
+    include: reject.yml
+    sort_by:
+      field: quality
+      reverse: yes
+
+  tv-settings:
+    <<: *tv_lookup
+    content_size:
+      max: 10000
+      min: 200
+    configure_series:
+      from:
+        <<: *trakt_tv_list
+        #<<: *thetvdb_list
+      settings:
+        exact: no
+        target: 1080p hdtv+
+        quality: 720p-1080p webrip+
+        timeframe: 18 hours
+        propers: 48 hours
+        identified_by: ep
+
+  movie-settings:
+    <<: *movie_lookup
+    proper_movies: no
+    content_size:
+      min: 1000
+      max: 20000
+      strict: no
+    quality: 1080p webdl+ !truehd dts+
+    list_match:
+      from:
+        - movie_list: Movies
+
+tasks:
+
+  # monitor-rss:
+  #   priority: 1
+  #   inputs:
+  #     - rss: '{? ar.rss ?}'
+  #     - rss: '{? tl.rss ?}'
+  #     - rss: '{? td.rss ?}'
+  #     - rss: '{? ipt.rss ?}'
+  #   template:
+  #     - global
+  #     - tv-settings
+
+  search-tv:
+    priority: 2
+    template:
+      - global-settings
+      - tv-settings
+    discover:
+      what:
+        - next_series_episodes: yes
+      from:
+        - alpharatio:
+            <<: *alpharatio_credentials
+            category: tvhd
+            #        - torrentday:
+            #            <<: *torrentday_credentials
+            #            category: tvHDx264
+        - iptorrents: 
+            <<: *iptorrents_credentials
+            category: [22, 5, 99]
+        - torrentleech: 
+            <<: *torrentleech_credentials
+            category: [32]
+      interval: 3 hours
+    cfscraper: yes
+      
+  search-movies:
+    priority: 3
+    template:
+      - global-settings
+      - movie-settings
+    discover:
+      release_estimations:
+        optimistic: 30 days
+      what:
+        - movie_list: Movies
+      from:
+        - alpharatio:
+            <<: *alpharatio_credentials
+            category: moviehd
+            #        - torrentday:
+            #            <<: *torrentday_credentials
+            #            category: movHD
+        - torrentleech: 
+            <<: *torrentleech_credentials
+            category: [14, 37]
+        - iptorrents: 
+            <<: *iptorrents_credentials
+            category: [48, 20, 100]
+      interval: 3 hours
+    cfscraper: yes
+
+  update-movie-queue:
+    priority: 30
+    <<: *movie_lookup
+    imdb_list:
+      login: '{? imdb.login ?}'
+      password: '{? imdb.password ?}'
+      list: watchlist
+    accept_all: yes
+    list_add:
+      - movie_list: Movies
+    no_entries_ok: yes
+    seen: local
+
+  cleanup-lists:
+    priority: 100
+    <<: *tv_lookup
+    template: trakt_tv_list
+    disable: seen
+    if:
+      - trakt_series_status in ['ended', 'cancelled']: accept
+    list_remove:
+      - <<: *trakt_tv_list
+    no_entries_ok: yes
+
+  cleanup-torrents:
+    priority: 50
+    from_transmission:
+      <<: *transmission
+    disable: [seen, seen_info_hash]
+    if:
+      - transmission_progress == 100: accept
+      - "transmission_ratio < 1.0 and transmission_date_done > now - timedelta(days=15)": reject
+    transmission:
+      <<: *transmission
+      action: purge
+
+  irc-tv-dl:
+    manual: yes
+    template:
+      - global-settings
+      - tv-settings
+
+  irc-movie-dl:
+    manual: yes
+    template:
+      - global-settings
+      - movie-settings
+
+schedules:
+  # - tasks: 'monitor-rss'
+  #   interval:
+  #     minutes: 30
+  - tasks: 'search-*'
+    interval:
+      hours: 6
+  - tasks: ['update-movie-queue', 'cleanup-*']
+    interval:
+      hours: 12
+
+web_server:
+  web_ui: yes
+#  base_url: /f
+
+irc:
+
+  irc_ar:
+    <<: *alpharatio_irc
+    tracker_file: 'AlphaRatio.tracker'
+    port: 7000
+    use_ssl: yes
+    invite_nickname: Voyager
+#    channels: ["#Announce","#AlphaRatio"]
+    channels: ["#Announce"]
+    task_re:
+      - task: irc-tv-dl
+        patterns:
+          - regexp: TvHD
+            field: irc_category
+      - task: irc-movie-dl
+        patterns:
+          - regexp: MovieHD
+            field: irc_category
+
+  irc_ipt:
+    <<: *iptorrents_irc
+    tracker_file: 'IPTorrents.tracker'
+    port: 6697
+    use_ssl: yes
+    channels: ["#ipt.announce2"]
+    task_re:
+      - task: irc-tv-dl
+        patterns:
+          - regexp: (TV\/x265|TV\/x264|TV\/Web-DL)
+            field: irc_category
+      - task: irc-movie-dl
+        patterns:
+          - regexp: (Movie\/HD\/Bluray|Movie\/Web-DL|Movie\/x265)
+            field: irc_category
+
+  irc_tl:
+    <<: *torrentleech_irc
+    tracker_file: 'TorrentLeech.tracker'
+    port: 7021
+    use_ssl: yes
+    channels: ["#tlannounces"]
+    task_re:
+      - task: irc-tv-dl
+        patterns:
+          - regexp: "(TV :: Episodes HD)"
+            field: irc_category
+      - task: irc-movie-dl
+        patterns:
+          - regexp: "(Movies :: Bluray|Movies :: 4K)"
+            field: irc_category
+
+  # irc_td:
+  #   <<: *torrentday_irc
+  #   tracker_file: 'TorrentDay.tracker'
+  #   port: 6697
+  #   use_ssl: yes
+  #   channels: ["#td.announce"]
+  #   task_re:
+  #     - task: irc-tv-dl
+  #       patterns:
+  #         - regexp: (TV\/x265|TV\/x264|TV\/Web-DL)
+  #           field: irc_category
+  #     - task: irc-movie-dl
+  #       patterns:
+  #         - regexp: (Movie\/HD\/Bluray|Movie\/Web-DL|Movie\/x265)
+  #           field: irc_category
+

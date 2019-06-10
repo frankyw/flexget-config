@@ -1,0 +1,13 @@
+regexp:
+  reject:
+    - \bR5\b: {from: title} 
+    - \bWEBSCR\b: {from: title}      
+    - \bscreener\b: {from: title}
+    - \bTS\b: {from: title}
+    - \bCam\b: {from: title}
+    - \bITA\b:  {from: title}  
+    - \bGERMAN\b:  {from: title}
+    - \bFRENCH\b:  {from: title}
+    - \bRUS\b:  {from: title} 
+    - \bHC\b:  {from: title}      
+    - \bREMUX\b:  {from: title}   
