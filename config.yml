@@ -103,23 +103,12 @@ templates:
       min: 1000
       max: 20000
       strict: no
-    quality: 1080p webdl+ !truehd dts+
+    quality: 1080p webdl+ dts+
     list_match:
       from:
         - movie_list: Movies
 
 tasks:
-
-  # monitor-rss:
-  #   priority: 1
-  #   inputs:
-  #     - rss: '{? ar.rss ?}'
-  #     - rss: '{? tl.rss ?}'
-  #     - rss: '{? td.rss ?}'
-  #     - rss: '{? ipt.rss ?}'
-  #   template:
-  #     - global
-  #     - tv-settings
 
   search-tv:
     priority: 2
@@ -133,9 +122,9 @@ tasks:
         - alpharatio:
             <<: *alpharatio_credentials
             category: tvhd
-            #        - torrentday:
-            #            <<: *torrentday_credentials
-            #            category: tvHDx264
+        - torrentday:
+            <<: *torrentday_credentials
+            category: tvHDx264
         - iptorrents: 
             <<: *iptorrents_credentials
             category: [22, 5, 99]
@@ -159,9 +148,9 @@ tasks:
         - alpharatio:
             <<: *alpharatio_credentials
             category: moviehd
-            #        - torrentday:
-            #            <<: *torrentday_credentials
-            #            category: movHD
+        - torrentday:
+            <<: *torrentday_credentials
+            category: movHD
         - torrentleech: 
             <<: *torrentleech_credentials
             category: [14, 37]
@@ -220,9 +209,6 @@ tasks:
       - movie-settings
 
 schedules:
-  # - tasks: 'monitor-rss'
-  #   interval:
-  #     minutes: 30
   - tasks: 'search-*'
     interval:
       hours: 6
@@ -232,7 +218,6 @@ schedules:
 
 web_server:
   web_ui: yes
-#  base_url: /f
 
 irc:
 
