@@ -122,9 +122,6 @@ tasks:
         - alpharatio:
             <<: *alpharatio_credentials
             category: tvhd
-        - torrentday:
-            <<: *torrentday_credentials
-            category: tvHDx264
         - iptorrents: 
             <<: *iptorrents_credentials
             category: [22, 5, 99]
@@ -133,7 +130,7 @@ tasks:
             category: [32]
       interval: 3 hours
     cfscraper: yes
-      
+
   search-movies:
     priority: 3
     template:
@@ -148,9 +145,6 @@ tasks:
         - alpharatio:
             <<: *alpharatio_credentials
             category: moviehd
-        - torrentday:
-            <<: *torrentday_credentials
-            category: movHD
         - torrentleech: 
             <<: *torrentleech_credentials
             category: [14, 37]

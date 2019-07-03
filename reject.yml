@@ -11,3 +11,4 @@ regexp:
     - \bRUS\b:  {from: title} 
     - \bHC\b:  {from: title}      
     - \bREMUX\b:  {from: title}   
+    - \bBDRiP\b:  {from: title}  
