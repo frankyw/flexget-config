@@ -78,6 +78,29 @@ templates:
     sort_by:
       field: quality
       reverse: yes
+    notify:
+      entries:
+        message: |+
+          *Download Started from task: *{{task|replace("_", "-")}}
+          {% if series_name is defined -%}
+          *{{series_name}}* - {{series_id}} - {{quality|d('')}}*
+          {% elif imdb_name is defined -%}
+          *{{imdb_name}}* - ({{imdb_year}})
+          {{quality|d('')}}
+          {{imdb_score}}/10 - {{imdb_votes}} votes
+          {{imdb_genres|join(', ')|title}} 
+          *Plot:* {{imdb_plot_outline}}
+          [Image]({{tmdb_posters[0]|replace("_", "%5F")}})
+          [Movie Page]({{imdb_url|d('')}})
+          {% else -%}
+          {{title}}
+          {%- endif -%}
+        via:
+          - telegram:
+              bot_token: '{? telegram.bot_token ?}'
+              parse_mode: markdown
+              recipients:
+                - username: '{? telegram.username ?}'
 
   tv-settings:
     <<: *tv_lookup
