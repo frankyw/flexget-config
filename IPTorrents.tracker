@@ -40,10 +40,10 @@
 			network="IPTorrents"
 			serverNames="irc.iptorrents.com"
 			channelNames="#ipt.announce,#ipt.announce2"
-			announcerNames="IPT,FunTimes"
+			announcerNames="IPT,Funtimes"
 			/>
 	</servers>
-
+ß
 	<parseinfo>
 		<linepatterns>
 			<extract>

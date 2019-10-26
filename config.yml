@@ -238,7 +238,7 @@ irc:
     tracker_file: 'IPTorrents.tracker'
     port: 6697
     use_ssl: yes
-    channels: ["#ipt.announce2"]
+    channels: ["#ipt.announce"]
     task_re:
       - task: irc-tv-dl
         patterns:
