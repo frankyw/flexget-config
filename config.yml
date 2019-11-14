@@ -61,6 +61,13 @@ templates:
       list: Download List
       type: shows
 
+  trakt_tv4k_list: &trakt_tv4k_list
+    trakt_list:
+      username: '{? trakt.username ?}'
+      account: '{? trakt.account ?}'
+      list: 4K List
+      type: shows
+      
   thetvdb_list: &thetvdb_list
     thetvdb_list:
       username: '{? thetvdb.username ?}'
@@ -95,7 +102,17 @@ templates:
         timeframe: 18 hours
         propers: 48 hours
         identified_by: ep
-
+    configure_series:
+      from:
+        <<: *trakt_tv4k_list
+      settings:
+        exact: no
+        target: 2160p webrip+
+        quality: 1080p webrip+
+        timeframe: 18 hours
+        propers: 48 hours
+        identified_by: ep
+        
   movie-settings:
     <<: *movie_lookup
     proper_movies: no
@@ -221,7 +238,6 @@ irc:
     port: 7000
     use_ssl: yes
     invite_nickname: Voyager
-#    channels: ["#Announce","#AlphaRatio"]
     channels: ["#Announce"]
     task_re:
       - task: irc-tv-dl
