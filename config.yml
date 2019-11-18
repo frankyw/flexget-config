@@ -46,13 +46,13 @@ templates:
       passkey: '{? td.rss_key ?}'
       nickname: '{? td.nickname ?}' 
 
-    _tv_lookup: &tv_lookup
-      thetvdb_lookup: yes
-      trakt_lookup: yes
-
     _movie_lookup: &movie_lookup
       imdb_lookup: yes
       tmdb_lookup: yes
+      
+    _tv_lookup: &tv_lookup
+      thetvdb_lookup: yes
+      trakt_lookup: yes
 
   trakt_tv_list: &trakt_tv_list
     trakt_list:
@@ -91,27 +91,27 @@ templates:
     content_size:
       max: 10000
       min: 200
-    configure_series:
-      from:
-        <<: *trakt_tv_list
-        #<<: *thetvdb_list
-      settings:
-        exact: no
-        target: 1080p hdtv+
-        quality: 720p-1080p webrip+
-        timeframe: 18 hours
-        propers: 48 hours
-        identified_by: ep
-    configure_series:
-      from:
-        <<: *trakt_tv4k_list
-      settings:
-        exact: no
-        target: 2160p webrip+
-        quality: 1080p webrip+
-        timeframe: 18 hours
-        propers: 48 hours
-        identified_by: ep
+    sequence:
+      - configure_series:
+          from:
+            <<: *trakt_tv_list
+          settings:
+            exact: no
+            target: 1080p hdtv+
+            quality: 720p-1080p webrip+
+            timeframe: 18 hours
+            propers: 48 hours
+            identified_by: ep
+      - configure_series:
+          from:
+            <<: *trakt_tv4k_list
+          settings:
+            exact: no
+            target: 2160p webrip+
+            quality: 1080p webrip+
+            timeframe: 24 hours
+            propers: 48 hours
+            identified_by: ep
         
   movie-settings:
     <<: *movie_lookup
@@ -138,7 +138,7 @@ tasks:
       from:
         - alpharatio:
             <<: *alpharatio_credentials
-            category: tvhd
+            category: TvHD, TvUHD
         - iptorrents: 
             <<: *iptorrents_credentials
             category: [22, 5, 99]
@@ -161,13 +161,13 @@ tasks:
       from:
         - alpharatio:
             <<: *alpharatio_credentials
-            category: moviehd
+            category: MovieHD, MovieUHD
         - torrentleech: 
             <<: *torrentleech_credentials
-            category: [14, 37]
+            category: [14, 37, 47]
         - iptorrents: 
             <<: *iptorrents_credentials
-            category: [48, 20, 100]
+            category: [48, 20, 100, 101]
       interval: 3 hours
     cfscraper: yes
 
@@ -190,7 +190,7 @@ tasks:
     template: trakt_tv_list
     disable: seen
     if:
-      - trakt_series_status in ['ended', 'cancelled']: accept
+      - trakt_series_status in ['ended', 'canceled']: accept
     list_remove:
       - <<: *trakt_tv_list
     no_entries_ok: yes
@@ -281,18 +281,18 @@ irc:
           - regexp: "(Movies :: Bluray|Movies :: 4K)"
             field: irc_category
 
-  irc_td:
-    <<: *torrentday_irc
-    tracker_file: 'TorrentDay.tracker'
-    port: 6697
-    use_ssl: yes
-    channels: ["#td.announce"]
-    task_re:
-      - task: irc-tv-dl
-        patterns:
-          - regexp: (TV\/x265|TV\/x264|TV\/Web-DL)
-            field: irc_category
-      - task: irc-movie-dl
-        patterns:
-          - regexp: (Movie\/HD\/Bluray|Movie\/Web-DL|Movie\/x265)
-            field: irc_category
+#  irc_td:
+#    <<: *torrentday_irc
+#    tracker_file: 'TorrentDay.tracker'
+#    port: 6697
+#    use_ssl: yes
+#    channels: ["#td.announce"]
+#    task_re:
+#      - task: irc-tv-dl
+#        patterns:
+#          - regexp: (TV\/x265|TV\/x264|TV\/Web-DL)
+#            field: irc_category
+#      - task: irc-movie-dl
+#        patterns:
+#          - regexp: (Movie\/HD\/Bluray|Movie\/Web-DL|Movie\/x265)
+#            field: irc_category
