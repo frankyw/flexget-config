@@ -138,7 +138,7 @@ tasks:
       from:
         - alpharatio:
             <<: *alpharatio_credentials
-            category: TvHD, TvUHD
+            category: [tvhd, tvuhd]
         - iptorrents: 
             <<: *iptorrents_credentials
             category: [22, 5, 99]
@@ -161,7 +161,7 @@ tasks:
       from:
         - alpharatio:
             <<: *alpharatio_credentials
-            category: MovieHD, MovieUHD
+            category: [moviehd, movieuhd]
         - torrentleech: 
             <<: *torrentleech_credentials
             category: [14, 37, 47]
