@@ -242,11 +242,11 @@ irc:
     task_re:
       - task: irc-tv-dl
         patterns:
-          - regexp: TvHD
+          - regexp: (TvHD|TvUHD)
             field: irc_category
       - task: irc-movie-dl
         patterns:
-          - regexp: MovieHD
+          - regexp: (MovieHD|MovieUHD)
             field: irc_category
 
   irc_ipt:
@@ -262,7 +262,7 @@ irc:
             field: irc_category
       - task: irc-movie-dl
         patterns:
-          - regexp: (Movie\/HD\/Bluray|Movie\/Web-DL|Movie\/x265)
+          - regexp: (Movie\/HD\/Bluray|Movie\/Web-DL|Movie\/x265|Movie\/4K)
             field: irc_category
 
   irc_tl:
@@ -281,18 +281,18 @@ irc:
           - regexp: "(Movies :: Bluray|Movies :: 4K)"
             field: irc_category
 
-#  irc_td:
-#    <<: *torrentday_irc
-#    tracker_file: 'TorrentDay.tracker'
-#    port: 6697
-#    use_ssl: yes
-#    channels: ["#td.announce"]
-#    task_re:
-#      - task: irc-tv-dl
-#        patterns:
-#          - regexp: (TV\/x265|TV\/x264|TV\/Web-DL)
-#            field: irc_category
-#      - task: irc-movie-dl
-#        patterns:
-#          - regexp: (Movie\/HD\/Bluray|Movie\/Web-DL|Movie\/x265)
-#            field: irc_category
+  irc_td:
+    <<: *torrentday_irc
+    tracker_file: 'TorrentDay.tracker'
+    port: 6697
+    use_ssl: yes
+    channels: ["#td.announce"]
+    task_re:
+      - task: irc-tv-dl
+        patterns:
+          - regexp: (TV\/x265|TV\/x264|TV\/Web-DL)
+            field: irc_category
+      - task: irc-movie-dl
+        patterns:
+          - regexp: (Movies\/HD\/Bluray|Movies\/Web-DL|Movies\/x265|Movie\/4K)
+            field: irc_category
