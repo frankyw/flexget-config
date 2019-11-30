@@ -98,7 +98,7 @@ templates:
           settings:
             exact: no
             target: 1080p hdtv+
-            quality: 720p-1080p webrip+
+            quality: 1080p webrip+
             timeframe: 18 hours
             propers: 48 hours
             identified_by: ep
@@ -109,8 +109,8 @@ templates:
             exact: no
             target: 2160p webrip+
             quality: 1080p webrip+
-            timeframe: 24 hours
-            propers: 48 hours
+            timeframe: 72 hours
+            propers: 72 hours
             identified_by: ep
         
   movie-settings:
