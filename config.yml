@@ -100,7 +100,7 @@ templates:
             target: 1080p hdtv+
             quality: 1080p webrip+
             timeframe: 18 hours
-            propers: 48 hours
+            propers: 2 days
             identified_by: ep
       - configure_series:
           from:
@@ -109,18 +109,18 @@ templates:
             exact: no
             target: 2160p webrip+
             quality: 1080p webrip+
-            timeframe: 72 hours
-            propers: 72 hours
+            timeframe: 3 days
+            propers: 3 days
             identified_by: ep
         
   movie-settings:
     <<: *movie_lookup
     proper_movies: no
     content_size:
-      min: 1000
-      max: 20000
+      min: 8000
+      max: 50000
       strict: no
-    quality: 1080p webdl+ dts+
+    quality: 2160p webdl+ dts+
     list_match:
       from:
         - movie_list: Movies
