@@ -107,9 +107,7 @@ templates:
             <<: *trakt_tv4k_list
           settings:
             exact: no
-            target: 2160p webrip+
-            quality: 1080p webrip+
-            timeframe: 3 days
+            quality: 2160p webrip+
             propers: 3 days
             identified_by: ep
         
@@ -118,7 +116,7 @@ templates:
     proper_movies: no
     content_size:
       min: 8000
-      max: 50000
+      max: 60000
       strict: no
     quality: 2160p webdl+ dts+
     list_match:
