@@ -116,7 +116,7 @@ templates:
     proper_movies: no
     content_size:
       min: 8000
-      max: 60000
+      max: 80000
       strict: no
     quality: 2160p webdl+ dts+
     list_match:
