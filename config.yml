@@ -160,9 +160,10 @@ tasks:
         - alpharatio:
             <<: *alpharatio_credentials
             category: [moviehd, movieuhd]
-        - torrentleech: 
-            <<: *torrentleech_credentials
-            category: [14, 37, 47]
+        # TL need to sort out their Movie categorization and release tagging
+        # - torrentleech: 
+        #     <<: *torrentleech_credentials
+        #     category: [14, 37, 47]
         - iptorrents: 
             <<: *iptorrents_credentials
             category: [48, 20, 100, 101]
@@ -191,6 +192,7 @@ tasks:
       - trakt_series_status in ['ended', 'canceled']: accept
     list_remove:
       - <<: *trakt_tv_list
+      - <<: *trakt_tv4k_list
     no_entries_ok: yes
 
   cleanup-torrents:
@@ -263,21 +265,22 @@ irc:
           - regexp: (Movie\/HD\/Bluray|Movie\/Web-DL|Movie\/x265|Movie\/4K)
             field: irc_category
 
-  irc_tl:
-    <<: *torrentleech_irc
-    tracker_file: 'TorrentLeech.tracker'
-    port: 7021
-    use_ssl: yes
-    channels: ["#tlannounces"]
-    task_re:
-      - task: irc-tv-dl
-        patterns:
-          - regexp: "(TV :: Episodes HD)"
-            field: irc_category
-      - task: irc-movie-dl
-        patterns:
-          - regexp: "(Movies :: Bluray|Movies :: 4K)"
-            field: irc_category
+  # Matching broken by TL
+  # irc_tl:
+  #   <<: *torrentleech_irc
+  #   tracker_file: 'TorrentLeech.tracker'
+  #   port: 7021
+  #   use_ssl: yes
+  #   channels: ["#tlannounces"]
+  #   task_re:
+  #     - task: irc-tv-dl
+  #       patterns:
+  #         - regexp: "(TV :: Episodes HD)"
+  #           field: irc_category
+  #     - task: irc-movie-dl
+  #       patterns:
+  #         - regexp: "(Movies :: Bluray|Movies :: 4K)"
+  #           field: irc_category
 
   irc_td:
     <<: *torrentday_irc
