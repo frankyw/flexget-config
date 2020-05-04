@@ -1,6 +1,6 @@
 # frankyw/flexget
 
-This is a repository to version control my personal flexget configuration. This configuration is used in conjunction with Transmission for downloading and Filebot for post-processing.
+This is a repository to version control my personal flexget configuration. This configuration is used in conjunction with Transmission for downloading and Filebot for post-processing. You can read more about this [on my blog](https://frankw.net/fully-automated-media-centre-flexget-emby-trakt-imdb/).
 
 ## Notes
 
