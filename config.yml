@@ -58,15 +58,22 @@ templates:
     trakt_list:
       username: '{? trakt.username ?}'
       account: '{? trakt.account ?}'
-      list: Download List
+      list: TV 1080p
       type: shows
 
   trakt_tv4k_list: &trakt_tv4k_list
     trakt_list:
       username: '{? trakt.username ?}'
       account: '{? trakt.account ?}'
-      list: 4K List
+      list: TV 4K
       type: shows
+
+  trakt_movie_list: &trakt_movie_list
+    trakt_list:
+      username: '{? trakt.username ?}'
+      account: '{? trakt.account ?}'
+      list: Movies
+      type: movies
       
   thetvdb_list: &thetvdb_list
     thetvdb_list:
@@ -173,10 +180,7 @@ tasks:
   update-movie-queue:
     priority: 30
     <<: *movie_lookup
-    imdb_list:
-      login: '{? imdb.login ?}'
-      password: '{? imdb.password ?}'
-      list: watchlist
+    <<: *trakt_movie_list
     accept_all: yes
     list_add:
       - movie_list: Movies
