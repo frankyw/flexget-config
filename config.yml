@@ -1,5 +1,7 @@
 variables: variables.yml
 
+### Templates
+
 templates:
   anchors:
     _transmission: &transmission
@@ -46,40 +48,38 @@ templates:
       passkey: '{? td.rss_key ?}'
       nickname: '{? td.nickname ?}' 
 
+    _trakt_credentials: &trakt_credentials
+      username: '{? trakt.username ?}'
+      account: '{? trakt.account ?}'
+
     _movie_lookup: &movie_lookup
       imdb_lookup: yes
       tmdb_lookup: yes
+      trakt_lookup:
+        <<: *trakt_credentials
       
     _tv_lookup: &tv_lookup
       thetvdb_lookup: yes
-      trakt_lookup: yes
+      trakt_lookup:
+        <<: *trakt_credentials
 
   trakt_tv_list: &trakt_tv_list
     trakt_list:
-      username: '{? trakt.username ?}'
-      account: '{? trakt.account ?}'
+      <<: *trakt_credentials
       list: '{? trakt.tv_list ?}'
       type: shows
 
   trakt_tv4k_list: &trakt_tv4k_list
     trakt_list:
-      username: '{? trakt.username ?}'
-      account: '{? trakt.account ?}'
+      <<: *trakt_credentials
       list: '{? trakt.tv4k_list ?}'
       type: shows
 
   trakt_movie_list: &trakt_movie_list
     trakt_list:
-      username: '{? trakt.username ?}'
-      account: '{? trakt.account ?}'
+      <<: *trakt_credentials
       list: '{? trakt.movie_list ?}'
       type: movies
-      
-  thetvdb_list: &thetvdb_list
-    thetvdb_list:
-      username: '{? thetvdb.username ?}'
-      account_id: '{? thetvdb.account_id ?}'
-      api_key: '{? thetvdb.api_key ?}'
 
   global-settings:
     transmission:
@@ -92,12 +92,15 @@ templates:
     sort_by:
       field: quality
       reverse: yes
+    if:
+      - trakt_collected: reject
+      - trakt_watched: reject
 
   tv-settings:
     <<: *tv_lookup
     content_size:
       max: 10000
-      min: 200
+      min: 500
     sequence:
       - configure_series:
           from:
@@ -117,7 +120,7 @@ templates:
             quality: 2160p webrip+
             propers: 3 days
             identified_by: ep
-        
+
   movie-settings:
     <<: *movie_lookup
     proper_movies: no
@@ -129,6 +132,8 @@ templates:
     list_match:
       from:
         - movie_list: Movies
+
+### Tasks
 
 tasks:
 
@@ -180,7 +185,7 @@ tasks:
   trakt-update-movie-queue:
     priority: 10
     <<: *movie_lookup
-    <<: *trakt_movie_list
+    template: trakt_movie_list
     accept_all: yes
     list_add:
       - movie_list: Movies
@@ -190,7 +195,7 @@ tasks:
   trakt-fill-tv-list:
     priority: 20
     trakt_list:
-      account: "{? trakt.account ?}"
+      <<: *trakt_credentials
       list: "{? trakt.tv_list ?}"
       type: episodes
       strip_dates: yes
@@ -198,19 +203,19 @@ tasks:
     set_series_begin: yes
     list_remove:
       - trakt_list:
-          account: "{? trakt.account ?}"
+          <<: *trakt_credentials
           list: "{? trakt.tv_list ?}"
           type: episodes
     list_add:
       - trakt_list:
-          account: "{? trakt.account ?}"
+          <<: *trakt_credentials
           list: "{? trakt.tv_list ?}"
           type: shows
 
   trakt-fill-tv4k-list:
     priority: 20
     trakt_list:
-      account: "{? trakt.account ?}"
+      <<: *trakt_credentials
       list: "{? trakt.tv4k_list ?}"
       type: episodes
       strip_dates: yes
@@ -218,18 +223,17 @@ tasks:
     set_series_begin: yes
     list_remove:
       - trakt_list:
-          account: "{? trakt.account ?}"
+          <<: *trakt_credentials
           list: "{? trakt.tv4k_list ?}"
           type: episodes
     list_add:
       - trakt_list:
-          account: "{? trakt.account ?}"
+          <<: *trakt_credentials
           list: "{? trakt.tv4k_list ?}"
           type: shows
 
   trakt-cleanup-tv-list:
     priority: 30
-    <<: *tv_lookup
     template: trakt_tv_list
     disable: seen
     if:
@@ -240,13 +244,24 @@ tasks:
 
   trakt-cleanup-tv4k-list:
     priority: 30
-    <<: *tv_lookup
     template: trakt_tv4k_list
     disable: seen
     if:
       - trakt_series_status in ['ended', 'canceled']: accept
     list_remove:
       - <<: *trakt_tv4k_list
+    no_entries_ok: yes
+
+  trakt-cleanup-movie-list:
+    priority: 30
+    trakt_lookup:
+      <<: *trakt_credentials
+    template: trakt_movie_list
+    disable: [seen, movie_queue]
+    if:
+      - trakt_collected: accept
+    list_remove:
+      - <<: *trakt_movie_list
     no_entries_ok: yes
 
   cleanup-torrents:
@@ -273,6 +288,8 @@ tasks:
       - global-settings
       - movie-settings
 
+### Schedules
+
 schedules:
   - tasks: 'search-*'
     interval:
@@ -281,8 +298,12 @@ schedules:
     interval:
       hours: 12
 
+### Web Server
+
 web_server:
   web_ui: yes
+
+### IRC Settings
 
 irc:
 
@@ -319,21 +340,21 @@ irc:
           - regexp: (Movie\/HD\/Bluray|Movie\/Web-DL|Movie\/x265|Movie\/4K)
             field: irc_category
 
-  irc_tl:
-    <<: *torrentleech_irc
-    tracker_file: 'TorrentLeech.tracker'
-    port: 7021
-    use_ssl: yes
-    channels: ["#tlannounces"]
-    task_re:
-      - task: irc-tv-dl
-        patterns:
-          - regexp: "(TV :: Episodes HD)"
-            field: irc_category
-      - task: irc-movie-dl
-        patterns:
-          - regexp: "(Movies :: Bluray|Movies :: 4K)"
-            field: irc_category
+  # irc_tl:
+  #   <<: *torrentleech_irc
+  #   tracker_file: 'TorrentLeech.tracker'
+  #   port: 7021
+  #   use_ssl: yes
+  #   channels: ["#tlannounces"]
+  #   task_re:
+  #     - task: irc-tv-dl
+  #       patterns:
+  #         - regexp: "(TV :: Episodes HD)"
+  #           field: irc_category
+  #     - task: irc-movie-dl
+  #       patterns:
+  #         - regexp: "(Movies :: Bluray|Movies :: 4K)"
+  #           field: irc_category
 
   irc_td:
     <<: *torrentday_irc
