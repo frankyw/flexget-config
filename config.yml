@@ -187,7 +187,24 @@ tasks:
     no_entries_ok: yes
     seen: local
 
-  cleanup-lists:
+  # sync-trakt:
+  #   sequence:
+  #     - next_trakt_episodes:
+  #         username: '{? trakt.username ?}'
+  #         account: '{? trakt.account ?}'
+  #         list: TV 1080p
+  #         context: collected
+  #       accept_all: yes
+  #       set_series_begin: yes
+  #     - next_trakt_episodes:
+  #         username: '{? trakt.username ?}'
+  #         account: '{? trakt.account ?}'
+  #         list: TV 4K
+  #         context: collected
+  #       accept_all: yes
+  #       set_series_begin: yes
+
+  cleanup-lists-tv-1080p:
     priority: 100
     <<: *tv_lookup
     template: trakt_tv_list
@@ -196,6 +213,16 @@ tasks:
       - trakt_series_status in ['ended', 'canceled']: accept
     list_remove:
       - <<: *trakt_tv_list
+    no_entries_ok: yes
+
+  cleanup-lists-tv-4k:
+    priority: 100
+    <<: *tv_lookup
+    template: trakt_tv4k_list
+    disable: seen
+    if:
+      - trakt_series_status in ['ended', 'canceled']: accept
+    list_remove:
       - <<: *trakt_tv4k_list
     no_entries_ok: yes
 
