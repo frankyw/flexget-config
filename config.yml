@@ -58,21 +58,21 @@ templates:
     trakt_list:
       username: '{? trakt.username ?}'
       account: '{? trakt.account ?}'
-      list: TV 1080p
+      list: '{? trakt.tv_list ?}'
       type: shows
 
   trakt_tv4k_list: &trakt_tv4k_list
     trakt_list:
       username: '{? trakt.username ?}'
       account: '{? trakt.account ?}'
-      list: TV 4K
+      list: '{? trakt.tv4k_list ?}'
       type: shows
 
   trakt_movie_list: &trakt_movie_list
     trakt_list:
       username: '{? trakt.username ?}'
       account: '{? trakt.account ?}'
-      list: Movies
+      list: '{? trakt.movie_list ?}'
       type: movies
       
   thetvdb_list: &thetvdb_list
@@ -133,7 +133,7 @@ templates:
 tasks:
 
   search-tv:
-    priority: 2
+    priority: 10
     template:
       - global-settings
       - tv-settings
@@ -154,7 +154,7 @@ tasks:
     cfscraper: yes
 
   search-movies:
-    priority: 3
+    priority: 20
     template:
       - global-settings
       - movie-settings
@@ -177,8 +177,8 @@ tasks:
       interval: 3 hours
     cfscraper: yes
 
-  update-movie-queue:
-    priority: 30
+  trakt-update-movie-queue:
+    priority: 10
     <<: *movie_lookup
     <<: *trakt_movie_list
     accept_all: yes
@@ -187,25 +187,48 @@ tasks:
     no_entries_ok: yes
     seen: local
 
-  # sync-trakt:
-  #   sequence:
-  #     - next_trakt_episodes:
-  #         username: '{? trakt.username ?}'
-  #         account: '{? trakt.account ?}'
-  #         list: TV 1080p
-  #         context: collected
-  #       accept_all: yes
-  #       set_series_begin: yes
-  #     - next_trakt_episodes:
-  #         username: '{? trakt.username ?}'
-  #         account: '{? trakt.account ?}'
-  #         list: TV 4K
-  #         context: collected
-  #       accept_all: yes
-  #       set_series_begin: yes
+  trakt-fill-tv-list:
+    priority: 20
+    trakt_list:
+      account: "{? trakt.account ?}"
+      list: "{? trakt.tv_list ?}"
+      type: episodes
+      strip_dates: yes
+    accept_all: yes
+    set_series_begin: yes
+    list_remove:
+      - trakt_list:
+          account: "{? trakt.account ?}"
+          list: "{? trakt.tv_list ?}"
+          type: episodes
+    list_add:
+      - trakt_list:
+          account: "{? trakt.account ?}"
+          list: "{? trakt.tv_list ?}"
+          type: shows
 
-  cleanup-lists-tv-1080p:
-    priority: 100
+  trakt-fill-tv4k-list:
+    priority: 20
+    trakt_list:
+      account: "{? trakt.account ?}"
+      list: "{? trakt.tv4k_list ?}"
+      type: episodes
+      strip_dates: yes
+    accept_all: yes
+    set_series_begin: yes
+    list_remove:
+      - trakt_list:
+          account: "{? trakt.account ?}"
+          list: "{? trakt.tv4k_list ?}"
+          type: episodes
+    list_add:
+      - trakt_list:
+          account: "{? trakt.account ?}"
+          list: "{? trakt.tv4k_list ?}"
+          type: shows
+
+  trakt-cleanup-tv-list:
+    priority: 30
     <<: *tv_lookup
     template: trakt_tv_list
     disable: seen
@@ -215,8 +238,8 @@ tasks:
       - <<: *trakt_tv_list
     no_entries_ok: yes
 
-  cleanup-lists-tv-4k:
-    priority: 100
+  trakt-cleanup-tv4k-list:
+    priority: 30
     <<: *tv_lookup
     template: trakt_tv4k_list
     disable: seen
@@ -227,7 +250,7 @@ tasks:
     no_entries_ok: yes
 
   cleanup-torrents:
-    priority: 50
+    priority: 40
     from_transmission:
       <<: *transmission
     disable: [seen, seen_info_hash]
@@ -254,7 +277,7 @@ schedules:
   - tasks: 'search-*'
     interval:
       hours: 6
-  - tasks: ['update-movie-queue', 'cleanup-*']
+  - tasks: ['trakt-*', 'cleanup-*']
     interval:
       hours: 12
 
@@ -296,22 +319,21 @@ irc:
           - regexp: (Movie\/HD\/Bluray|Movie\/Web-DL|Movie\/x265|Movie\/4K)
             field: irc_category
 
-  # Matching broken by TL
-  # irc_tl:
-  #   <<: *torrentleech_irc
-  #   tracker_file: 'TorrentLeech.tracker'
-  #   port: 7021
-  #   use_ssl: yes
-  #   channels: ["#tlannounces"]
-  #   task_re:
-  #     - task: irc-tv-dl
-  #       patterns:
-  #         - regexp: "(TV :: Episodes HD)"
-  #           field: irc_category
-  #     - task: irc-movie-dl
-  #       patterns:
-  #         - regexp: "(Movies :: Bluray|Movies :: 4K)"
-  #           field: irc_category
+  irc_tl:
+    <<: *torrentleech_irc
+    tracker_file: 'TorrentLeech.tracker'
+    port: 7021
+    use_ssl: yes
+    channels: ["#tlannounces"]
+    task_re:
+      - task: irc-tv-dl
+        patterns:
+          - regexp: "(TV :: Episodes HD)"
+            field: irc_category
+      - task: irc-movie-dl
+        patterns:
+          - regexp: "(Movies :: Bluray|Movies :: 4K)"
+            field: irc_category
 
   irc_td:
     <<: *torrentday_irc
