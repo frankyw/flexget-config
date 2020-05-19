@@ -55,8 +55,6 @@ templates:
     _movie_lookup: &movie_lookup
       imdb_lookup: yes
       tmdb_lookup: yes
-      trakt_lookup:
-        <<: *trakt_credentials
       
     _tv_lookup: &tv_lookup
       thetvdb_lookup: yes
@@ -185,6 +183,8 @@ tasks:
   trakt-update-movie-queue:
     priority: 10
     <<: *movie_lookup
+    trakt_lookup:
+      <<: *trakt_credentials    
     template: trakt_movie_list
     accept_all: yes
     list_add:
@@ -211,6 +211,7 @@ tasks:
           <<: *trakt_credentials
           list: "{? trakt.tv_list ?}"
           type: shows
+    no_entries_ok: yes
 
   trakt-fill-tv4k-list:
     priority: 20
@@ -231,6 +232,7 @@ tasks:
           <<: *trakt_credentials
           list: "{? trakt.tv4k_list ?}"
           type: shows
+    no_entries_ok: yes
 
   trakt-cleanup-tv-list:
     priority: 30
