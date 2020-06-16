@@ -90,6 +90,8 @@ templates:
     sort_by:
       field: quality
       reverse: yes
+    trakt_lookup:
+      <<: *trakt_credentials
     if:
       - trakt_collected: reject
       - trakt_watched: reject
@@ -116,7 +118,7 @@ templates:
           settings:
             exact: no
             quality: 2160p webrip+
-            propers: 3 days
+            propers: 2 days
             identified_by: ep
 
   movie-settings:
@@ -183,8 +185,8 @@ tasks:
   trakt-update-movie-queue:
     priority: 10
     <<: *movie_lookup
-    trakt_lookup:
-      <<: *trakt_credentials    
+    # trakt_lookup:
+    #   <<: *trakt_credentials    
     template: trakt_movie_list
     accept_all: yes
     list_add:
@@ -212,6 +214,7 @@ tasks:
           list: "{? trakt.tv_list ?}"
           type: shows
     no_entries_ok: yes
+    seen: local
 
   trakt-fill-tv4k-list:
     priority: 20
@@ -233,6 +236,7 @@ tasks:
           list: "{? trakt.tv4k_list ?}"
           type: shows
     no_entries_ok: yes
+    seen: local
 
   trakt-cleanup-tv-list:
     priority: 30
@@ -259,7 +263,7 @@ tasks:
     trakt_lookup:
       <<: *trakt_credentials
     template: trakt_movie_list
-    disable: [seen, movie_queue]
+    disable: [seen]
     if:
       - trakt_collected: accept
     list_remove:
@@ -280,15 +284,17 @@ tasks:
 
   irc-tv-dl:
     manual: yes
+    max_reruns: 0
     template:
       - global-settings
       - tv-settings
 
   irc-movie-dl:
     manual: yes
+    max_reruns: 0
     template:
-      - global-settings
       - movie-settings
+      - global-settings
 
 ### Schedules
 
