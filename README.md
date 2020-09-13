@@ -1,4 +1,4 @@
-# frankyw/flexget
+## frankyw/flexget-config
 
 This is a repository to version control my personal FlexGet configuration. This configuration is used in conjunction with Transmission for downloading, Filebot for post-processing and emby for viewing. You can read more about this [on my blog](https://frankw.net/fully-automated-media-centre-flexget-emby-trakt-imdb/).
 
