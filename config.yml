@@ -349,21 +349,21 @@ irc:
           - regexp: (Movie\/HD\/Bluray|Movie\/Web-DL|Movie\/x265|Movie\/4K)
             field: irc_category
 
-  # irc_tl:
-  #   <<: *torrentleech_irc
-  #   tracker_file: 'TorrentLeech.tracker'
-  #   port: 7021
-  #   use_ssl: yes
-  #   channels: ["#tlannounces"]
-  #   task_re:
-  #     - task: irc-tv-dl
-  #       patterns:
-  #         - regexp: "(TV :: Episodes HD)"
-  #           field: irc_category
-  #     - task: irc-movie-dl
-  #       patterns:
-  #         - regexp: "(Movies :: Bluray|Movies :: 4K)"
-  #           field: irc_category
+  irc_tl:
+    <<: *torrentleech_irc
+    tracker_file: 'TorrentLeech.tracker'
+    port: 7021
+    use_ssl: yes
+    channels: ["#tlannounces"]
+    task_re:
+      - task: irc-tv-dl
+        patterns:
+          - regexp: "(TV :: Episodes HD)"
+            field: irc_category
+      - task: irc-movie-dl
+        patterns:
+          - regexp: "(Movies :: Bluray|Movies :: 4K)"
+            field: irc_category
 
   irc_td:
     <<: *torrentday_irc
