@@ -184,13 +184,11 @@ tasks:
 
   trakt-update-movie-queue:
     priority: 10
-    <<: *movie_lookup
-    # trakt_lookup:
-    #   <<: *trakt_credentials    
+    <<: *movie_lookup 
     template: trakt_movie_list
     accept_all: yes
     list_add:
-      - movie_list: Movies
+      - movie_list: "{? trakt.movie_list ?}"
     no_entries_ok: yes
     seen: local
 
@@ -263,7 +261,7 @@ tasks:
     trakt_lookup:
       <<: *trakt_credentials
     template: trakt_movie_list
-    disable: [seen]
+    disable: seen
     if:
       - trakt_collected: accept
     list_remove:
