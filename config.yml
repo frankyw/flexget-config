@@ -239,6 +239,7 @@ tasks:
   trakt-cleanup-tv-list:
     priority: 30
     template: trakt_tv_list
+    <<: *tv_lookup
     disable: seen
     if:
       - trakt_series_status in ['ended', 'canceled']: accept
@@ -249,6 +250,7 @@ tasks:
   trakt-cleanup-tv4k-list:
     priority: 30
     template: trakt_tv4k_list
+    <<: *tv_lookup
     disable: seen
     if:
       - trakt_series_status in ['ended', 'canceled']: accept
