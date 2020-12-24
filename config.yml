@@ -168,14 +168,12 @@ tasks:
       what:
         - movie_list: Movies
       from:
-        # AR search plugin is broken:: Error searching with alpharatio: invalid literal for int() with base 10:
-        # - alpharatio:
-        #     <<: *alpharatio_credentials
-        #     category: [moviehd, movieuhd]
-        # TL need to sort out their Movie categorization and release tagging
-        # - torrentleech: 
-        #     <<: *torrentleech_credentials
-        #     category: [14, 37, 47]
+        - alpharatio:
+            <<: *alpharatio_credentials
+            category: [moviehd, movieuhd]
+        - torrentleech: 
+            <<: *torrentleech_credentials
+            category: [14, 37, 47]
         - iptorrents: 
             <<: *iptorrents_credentials
             category: [48, 20, 100, 101]
@@ -198,7 +196,6 @@ tasks:
       <<: *trakt_credentials
       list: "{? trakt.tv_list ?}"
       type: episodes
-      strip_dates: yes
     accept_all: yes
     set_series_begin: yes
     list_remove:
@@ -220,7 +217,6 @@ tasks:
       <<: *trakt_credentials
       list: "{? trakt.tv4k_list ?}"
       type: episodes
-      strip_dates: yes
     accept_all: yes
     set_series_begin: yes
     list_remove:
