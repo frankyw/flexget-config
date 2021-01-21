@@ -164,13 +164,15 @@ tasks:
       - global-settings
       - movie-settings
     discover:
-      release_estimations: loose
+      release_estimations:
+        optimistic: 4 weeks
       what:
         - movie_list: Movies
       from:
-        - alpharatio:
-            <<: *alpharatio_credentials
-            category: [moviehd, movieuhd]
+        # BROKEN: Error searching with alpharatio: invalid literal for int() with base 10: '1,604'
+        # - alpharatio:
+        #     <<: *alpharatio_credentials
+        #     category: [moviehd, movieuhd]
         - torrentleech: 
             <<: *torrentleech_credentials
             category: [14, 37, 47]
