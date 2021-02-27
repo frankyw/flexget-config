@@ -13,3 +13,5 @@ regexp:
     - \bREMUX\b:  {from: title}   
     - \bBDRiP\b:  {from: title}  
     - \bSUBFRENCH\b:  {from: title} 
+    - \btrailer\b: {from: title} 
+    - \baac2: {from: title} # No 2 channel audio

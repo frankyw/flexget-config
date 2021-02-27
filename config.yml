@@ -53,6 +53,7 @@ templates:
       account: '{? trakt.account ?}'
 
     _movie_lookup: &movie_lookup
+      metainfo_movie: yes
       imdb_lookup: yes
       tmdb_lookup: yes
       
@@ -86,7 +87,9 @@ templates:
       path: /storage
       space: 20000
     pathscrub: windows
-    include: reject.yml
+    include:
+      - reject.yml
+      - log_filter.yml
     sort_by:
       field: quality
       reverse: yes
@@ -122,7 +125,7 @@ templates:
             identified_by: ep
 
   movie-settings:
-    <<: *movie_lookup
+    imdb_lookup: yes
     proper_movies: no
     content_size:
       min: 8000
@@ -292,8 +295,8 @@ tasks:
     manual: yes
     max_reruns: 0
     template:
-      - movie-settings
       - global-settings
+      - movie-settings
 
 ### Schedules
 
