@@ -89,7 +89,6 @@ templates:
     pathscrub: windows
     include:
       - reject.yml
-      - log_filter.yml
     sort_by:
       field: quality
       reverse: yes
