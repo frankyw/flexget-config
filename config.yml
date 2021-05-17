@@ -62,6 +62,20 @@ templates:
       trakt_lookup:
         <<: *trakt_credentials
 
+    _mobile_push: &mobile_push
+      notify:
+        entries:
+          title: Download from task {{task}}
+          template: pushover.template
+          via:
+            - pushover:
+                api_key: '{? pushover.api_key ?}'
+                user_key: '{? pushover.user_key ?}'
+                url: '{{trakt_series_url|d(imdb_url)}}'
+                url_title: More Info
+                sound: incoming
+                html: yes
+
   trakt_tv_list: &trakt_tv_list
     trakt_list:
       <<: *trakt_credentials
@@ -97,6 +111,7 @@ templates:
     if:
       - trakt_collected: reject
       - trakt_watched: reject
+    <<: *mobile_push
 
   tv-settings:
     <<: *tv_lookup
@@ -130,7 +145,7 @@ templates:
       min: 8000
       max: 80000
       strict: no
-    quality: 2160p webdl+ dts+
+    quality: 2160p webdl+ dts+ # hdr+ dts+
     list_match:
       from:
         - movie_list: Movies
@@ -171,10 +186,9 @@ tasks:
       what:
         - movie_list: Movies
       from:
-        # BROKEN: Error searching with alpharatio: invalid literal for int() with base 10: '1,604'
-        # - alpharatio:
-        #     <<: *alpharatio_credentials
-        #     category: [moviehd, movieuhd]
+        - alpharatio:
+            <<: *alpharatio_credentials
+            category: [moviehd, movieuhd]
         - torrentleech: 
             <<: *torrentleech_credentials
             category: [14, 37, 47]
