@@ -1,0 +1,45 @@
+transmission:
+  username: 
+  password: 
+
+trakt:
+  account: 
+  username: 
+  tv_list: 
+  tv4k_list: 
+  movie_list: 
+
+pushover:
+  user_key: 
+  api_key: 
+
+tl:
+  rss: 
+  rss_key: 
+  username: 
+  password: 
+  nickname: 
+
+td: 
+  rss: 
+  uid: 
+  cfduid: 
+  passkey: 
+  rss_key: 
+  nickname:
+
+ipt:
+  rss: 
+  passkey: 
+  uid: 
+  password: 
+  nickname:
+
+ar:
+  rss:
+  username: 
+  password:   
+  nickname: 
+  authkey: 
+  torrent_pass: 
+  invite_message:
