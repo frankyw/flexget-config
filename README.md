@@ -20,7 +20,7 @@ This is a repository to version control my personal FlexGet configuration. This 
 
 * This config is 100% private tracker-based, I no longer use public trackers due to security/privacy concerns. A VPN may also be advisable, depending on your jurisdiction.
 * Most downloads are fetched in real-time via private tracker IRC announce channels. This is helpful on ratio sites to maintain ratio.
-* Anything not downloaded in real-time via IRC (e.g. offline, added after release, etc) downloaded via a periodic search of private trackers using the discover plugin.
+* Anything not downloaded in real-time via IRC (e.g. offline, added after release, etc) is downloaded via a periodic search of private trackers using the discover plugin.
 * Downloads are seeded for 2 weeks, or until my ratio target set in Transmission is met. Cleanup is done using a scheduled task.
 * When new downloads are started, a push notification is sent to the [Pushover app](https://pushover.net/), providing details of the download.
 

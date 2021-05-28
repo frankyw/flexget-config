@@ -6,7 +6,7 @@
 {{trakt_ep_overview}}
 {% elif imdb_name is defined %}
 <b>{{movie_name}} - {{imdb_year}}</b>
-<b>Rating:</b> {{imdb_rating}} (iMDB) / {{trakt_rating}} (Trakt)
+<b>Rating:</b> {{imdb_score}} (iMDB) | {{trakt_rating}} (Trakt)
 <b>Release Date:</b> {{trakt_released}}
 <b>Quality:</b> {{quality}}
 {{imdb_plot_outline}}
