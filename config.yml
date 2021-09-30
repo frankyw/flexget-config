@@ -145,7 +145,7 @@ templates:
       min: 8000
       max: 80000
       strict: no
-    quality: 2160p webdl+ dts+ # hdr+ dts+
+    quality: 2160p webdl+ hdr+
     list_match:
       from:
         - movie_list: Movies
