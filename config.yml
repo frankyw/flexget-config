@@ -394,3 +394,9 @@ irc:
         patterns:
           - regexp: (Movies\/HD\/Bluray|Movies\/Web-DL|Movies\/x265|Movie\/4K)
             field: irc_category
+
+log_filter:
+- message: "lookup failed"
+  plugin: imdb_lookup
+- message: "Error refreshing movie details"
+  plugin: api_bluray
