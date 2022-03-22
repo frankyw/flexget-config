@@ -137,6 +137,7 @@ templates:
             quality: 2160p webrip+
             propers: 2 days
             identified_by: ep
+    include: alternates.yml
 
   movie-settings:
     imdb_lookup: yes
