@@ -112,6 +112,9 @@ templates:
       - trakt_collected: reject
       - trakt_watched: reject
     <<: *mobile_push
+    # parsing:
+    #   movie: guessit
+    #   series: guessit
 
   tv-settings:
     <<: *tv_lookup
@@ -137,7 +140,6 @@ templates:
             quality: 2160p webrip+
             propers: 2 days
             identified_by: ep
-    include: alternates.yml
 
   movie-settings:
     imdb_lookup: yes
@@ -175,6 +177,7 @@ tasks:
             category: [32]
       interval: 3 hours
     cfscraper: yes
+    include: alternates.yml
 
   search-movies:
     priority: 20
