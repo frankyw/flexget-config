@@ -65,7 +65,7 @@ templates:
     _mobile_push: &mobile_push
       notify:
         entries:
-          title: Download from task {{task}}
+          title: Download from {{task}}
           template: pushover.template
           via:
             - pushover:

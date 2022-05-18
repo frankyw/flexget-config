@@ -1,14 +1,16 @@
 {% if series_name is defined %}
 <b>{{series_name}} {{series_id}}</b>
-<b>Title:</b> {{trakt_ep_name}}
+<b>Episode Name:</b> {{trakt_ep_name}}
 <b>Aired:</b> {{trakt_series_air_day}} at {{trakt_series_air_time}} on {{trakt_series_network}}
 <b>Quality:</b> {{quality|d('')}}
+<b>Title:</b> {{title}}
 {{trakt_ep_overview}}
 {% elif imdb_name is defined %}
 <b>{{movie_name}} - {{imdb_year}}</b>
 <b>Rating:</b> {{imdb_score}} (iMDB) | {{trakt_rating}} (Trakt)
 <b>Release Date:</b> {{trakt_released}}
 <b>Quality:</b> {{quality}}
+<b>Title:</b> {{title}}
 {{imdb_plot_outline}}
 {% else %} {{title}}
 {% endif %}
