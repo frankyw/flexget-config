@@ -137,7 +137,7 @@ templates:
             <<: *trakt_tv4k_list
           settings:
             exact: no
-            quality: 2160p webrip+
+            quality: 2160p webrip+ !dolbyvision
             propers: 2 days
             identified_by: ep
 
@@ -148,7 +148,7 @@ templates:
       min: 8000
       max: 80000
       strict: no
-    quality: 2160p webdl+ hdr+
+    quality: 2160p webdl+ hdr+ !dolbyvision
     list_match:
       from:
         - movie_list: Movies
