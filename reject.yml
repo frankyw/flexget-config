@@ -8,6 +8,7 @@ regexp:
     - \bITA\b:  {from: title}  
     - \bGERMAN\b:  {from: title}
     - \bFRENCH\b:  {from: title}
+    - \bNORDIC\b:  {from: title}
     - \bRUS\b:  {from: title} 
     - \bHC\b:  {from: title}      
     - \bREMUX\b:  {from: title}   

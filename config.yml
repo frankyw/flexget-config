@@ -98,7 +98,7 @@ templates:
     transmission:
       <<: *transmission
     free_space:
-      path: /storage
+      path: /video
       space: 20000
     pathscrub: windows
     include:
@@ -151,7 +151,7 @@ templates:
     quality: 2160p webdl+ hdr+ !dolbyvision
     list_match:
       from:
-        - movie_list: Movies
+        - movie_list: "{? trakt.movie_list ?}"
 
 ### Tasks
 
@@ -276,7 +276,7 @@ tasks:
       - <<: *trakt_tv4k_list
     no_entries_ok: yes
 
-  trakt-cleanup-movie-list:
+  cleanup-movie-list:
     priority: 30
     trakt_lookup:
       <<: *trakt_credentials
@@ -286,6 +286,7 @@ tasks:
       - trakt_collected: accept
     list_remove:
       - <<: *trakt_movie_list
+      - movie_list: "{? trakt.movie_list ?}"
     no_entries_ok: yes
 
   cleanup-torrents:
@@ -295,7 +296,7 @@ tasks:
     disable: [seen, seen_info_hash]
     if:
       - transmission_progress == 100: accept
-      - "transmission_ratio < 1.0 and transmission_date_done > now - timedelta(days=15)": reject
+      - "transmission_ratio < 1.0 and transmission_date_done > now - timedelta(days=30)": reject
     transmission:
       <<: *transmission
       action: purge
