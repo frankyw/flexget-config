@@ -172,9 +172,13 @@ tasks:
         - iptorrents: 
             <<: *iptorrents_credentials
             category: [22, 5, 99]
-        - torrentleech: 
-            <<: *torrentleech_credentials
-            category: [32]
+        # Temporarily disabled due to Cloudflare v2 challenge crashing cloudscraper and flexget
+        # - torrentleech: 
+        #     <<: *torrentleech_credentials
+        #     category: [32]
+        - rarbg:
+            category: [18, 41, 49]
+
       interval: 3 hours
     cfscraper: yes
     include: alternates.yml
@@ -193,12 +197,15 @@ tasks:
         - alpharatio:
             <<: *alpharatio_credentials
             category: [moviehd, movieuhd]
-        - torrentleech: 
-            <<: *torrentleech_credentials
-            category: [14, 37, 47]
+        # Temporarily disabled due to Cloudflare v2 challenge crashing cloudscraper and flexget
+        # - torrentleech: 
+        #     <<: *torrentleech_credentials
+        #     category: [14, 37, 47]
         - iptorrents: 
             <<: *iptorrents_credentials
             category: [48, 20, 100, 101]
+        - rarbg:
+            category: [17, 44, 50, 51, 52]
       interval: 6 hours
     cfscraper: yes
 
@@ -341,7 +348,7 @@ irc:
     port: 7000
     use_ssl: yes
     invite_nickname: Voyager
-    channels: ["#Announce"]
+    channels: ["#Announce", "#AlphaRatio"]
     task_re:
       - task: irc-tv-dl
         patterns:
