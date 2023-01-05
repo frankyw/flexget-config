@@ -132,6 +132,7 @@ templates:
             timeframe: 18 hours
             propers: 2 days
             identified_by: ep
+            specials: no
       - configure_series:
           from:
             <<: *trakt_tv4k_list
@@ -140,6 +141,7 @@ templates:
             quality: 2160p webrip+ !dolbyvision
             propers: 2 days
             identified_by: ep
+            specials: no
 
   movie-settings:
     imdb_lookup: yes
@@ -151,7 +153,7 @@ templates:
     quality: 2160p webdl+ hdr+ !dolbyvision
     list_match:
       from:
-        - movie_list: "{? trakt.movie_list ?}"
+        - movie_list: Movies
 
 ### Tasks
 
@@ -178,7 +180,6 @@ tasks:
         #     category: [32]
         - rarbg:
             category: [18, 41, 49]
-
       interval: 3 hours
     cfscraper: yes
     include: alternates.yml
@@ -215,7 +216,7 @@ tasks:
     template: trakt_movie_list
     accept_all: yes
     list_add:
-      - movie_list: "{? trakt.movie_list ?}"
+      - movie_list: Movies
     no_entries_ok: yes
     seen: local
 
@@ -271,6 +272,7 @@ tasks:
     list_remove:
       - <<: *trakt_tv_list
     no_entries_ok: yes
+    series_remove: yes
 
   trakt-cleanup-tv4k-list:
     priority: 30
@@ -282,6 +284,7 @@ tasks:
     list_remove:
       - <<: *trakt_tv4k_list
     no_entries_ok: yes
+    series_remove: yes
 
   cleanup-movie-list:
     priority: 30
@@ -293,7 +296,7 @@ tasks:
       - trakt_collected: accept
     list_remove:
       - <<: *trakt_movie_list
-      - movie_list: "{? trakt.movie_list ?}"
+      - movie_list: Movies
     no_entries_ok: yes
 
   cleanup-torrents:
