@@ -18,6 +18,5 @@ regexp:
     - \btrailer\b: {from: title} 
     - \baac2: {from: title} # No 2 channel audio
     - \baFi\b: {from: title} # garbage releases
-    - \bCAKES\b:  {from: title} # garbage releases
     - \bDV\b: {from: title} # Block Dolby Vision
     - \bDoVi \b: {from: title} # Block Dolby Vision

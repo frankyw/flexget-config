@@ -174,10 +174,9 @@ tasks:
         - iptorrents: 
             <<: *iptorrents_credentials
             category: [22, 5, 99]
-        # Temporarily disabled due to Cloudflare v2 challenge crashing cloudscraper and flexget
-        # - torrentleech: 
-        #     <<: *torrentleech_credentials
-        #     category: [32]
+        - torrentleech: 
+            <<: *torrentleech_credentials
+            category: [32]
         - rarbg:
             category: [18, 41, 49]
       interval: 3 hours
@@ -198,10 +197,9 @@ tasks:
         - alpharatio:
             <<: *alpharatio_credentials
             category: [moviehd, movieuhd]
-        # Temporarily disabled due to Cloudflare v2 challenge crashing cloudscraper and flexget
-        # - torrentleech: 
-        #     <<: *torrentleech_credentials
-        #     category: [14, 37, 47]
+        - torrentleech: 
+            <<: *torrentleech_credentials
+            category: [14, 37, 47]
         - iptorrents: 
             <<: *iptorrents_credentials
             category: [48, 20, 100, 101]
@@ -306,7 +304,7 @@ tasks:
     disable: [seen, seen_info_hash]
     if:
       - transmission_progress == 100: accept
-      - "transmission_ratio < 1.0 and transmission_date_done > now - timedelta(days=30)": reject
+      - "transmission_ratio < 1.0 and transmission_date_done and (transmission_date_done > now - timedelta(days=30))": reject
     transmission:
       <<: *transmission
       action: purge
