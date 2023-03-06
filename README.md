@@ -1,5 +1,7 @@
 ## frankyw/flexget-config
 
+### ARCHIVED: This repository has been archived as I am no longer using Flexget, and instead have switched to the *arr stack. You can view the [home-server](https://github.com/frankyw/home-server) repo for more info.
+
 This is a repository to version control my personal FlexGet configuration. This configuration is used in conjunction with [Transmission](https://transmissionbt.com/) for downloading, [Filebot](https://www.filebot.net/) for post-processing and extraction, and [Emby](https://emby.media/) for viewing. You can read more about this [on my blog](https://frankw.net/fully-automated-media-centre-flexget-emby-trakt-imdb/).
 
 ## Notes
